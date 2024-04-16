@@ -1,6 +1,5 @@
-package OOP2.proekt.f22621609;
-import java.io.Closeable;
-import java.io.IOException;
+package OOP2.proekt.f22621609.main_functions;
+import OOP2.proekt.f22621609.contracts.FileHandler;
 
 public class FileCloser implements FileHandler {
     private StringBuilder fileContent;

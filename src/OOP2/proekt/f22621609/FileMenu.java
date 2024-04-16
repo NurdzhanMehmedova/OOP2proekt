@@ -1,6 +1,12 @@
 package OOP2.proekt.f22621609;
+import OOP2.proekt.f22621609.contracts.FileHandler;
+import OOP2.proekt.f22621609.main_functions.*;
+
 import java.util.HashMap;
-import java.util.Map;public class FileMenu {
+import java.util.Map;
+import java.util.UUID;
+public class FileMenu {
+
     private Map<String, FileHandler> commandMap = new HashMap<>();
     private StringBuilder fileContent = new StringBuilder();
     private String currentFileName = "";

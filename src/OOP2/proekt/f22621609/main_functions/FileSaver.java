@@ -1,4 +1,6 @@
-package OOP2.proekt.f22621609;
+package OOP2.proekt.f22621609.main_functions;
+import OOP2.proekt.f22621609.contracts.FileHandler;
+
 import java.io.*;
 
 public class FileSaver implements FileHandler {
