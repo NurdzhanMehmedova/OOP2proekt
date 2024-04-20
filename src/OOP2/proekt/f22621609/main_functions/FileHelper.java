@@ -15,6 +15,7 @@ public class FileHelper implements FileHandler {
         System.out.println("save\t\t- saves the currently open file");
         System.out.println("saveas <file>\t- saves the currently open file in <file>");
         System.out.println("help\t\t- prints this information");
+        System.out.println("list\t\t- prints the id of machines");
         System.out.println("exit\t\t- exits the program");
     }
 }

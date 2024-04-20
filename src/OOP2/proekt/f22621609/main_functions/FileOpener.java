@@ -23,20 +23,29 @@ public class FileOpener implements FileHandler {
     public void processing() {
         try {
             File file = new File(fileName);
-            if (file.exists()) {
-                try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        fileContent.append(line).append("\n");
-                    }
-                    System.out.println("Successfully opened " + file.getName());
+            if (!file.exists()) {
+                // If the file doesn't exist, create a new one
+                if (file.createNewFile()) {
+                    System.out.println("File created: " + file.getName());
+                } else {
+                    System.out.println("Failed to create the file.");
+                    return;
                 }
-            } else {
-                fileContent.setLength(0);
-                System.out.println("File not found. Created a new empty file.");
+            }
+
+            try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    fileContent.append(line).append("\n");
+                }
+                System.out.println("Successfully opened " + file.getName());
             }
         } catch (IOException e) {
             System.out.println("Error opening the file: " + e.getMessage());
         }
+    }
+
+    public StringBuilder getFileContent() {
+        return fileContent;
     }
 }

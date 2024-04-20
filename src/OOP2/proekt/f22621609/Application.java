@@ -1,13 +1,11 @@
 package OOP2.proekt.f22621609;
 
-import OOP2.proekt.f22621609.secondary_functions.ConcatCommand;
-import OOP2.proekt.f22621609.secondary_functions.DeterministicCommand;
-import OOP2.proekt.f22621609.secondary_functions.EmptyCommand;
-import OOP2.proekt.f22621609.secondary_functions.RecognizeCommand;
+import OOP2.proekt.f22621609.main_functions.FileMenu;
+import OOP2.proekt.f22621609.secondary_functions.*;
 
 import java.util.Scanner;
 
-public class Application {
+/*public class Application {
     public static void main(String[] args) {
         FileMenu fileMenu = new FileMenu();
         FiniteAutomaton automaton = new FiniteAutomaton();
@@ -47,6 +45,40 @@ public class Application {
             // осталите - un, union, reg, save, print
 
             System.out.println();
+        }
+
+
+        scanner.close();
+    }
+}*/
+import java.util.Scanner;
+
+public class Application {
+    public static void main(String[] args) {
+        FileMenu fileMenu = new FileMenu();
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Current directory of files: " + System.getProperty("user.dir"));
+        boolean running = true;
+        while (running) {
+            System.out.print("Enter command: ");
+            String command = scanner.nextLine().trim();
+
+            switch (command.toLowerCase()) {
+                case "exit":
+                    fileMenu.executeCommand(command);
+                    running = false;
+                    break;
+                case "print":
+                    System.out.print("Enter automaton ID: ");
+                    String automatonId = scanner.nextLine().trim();
+                    ((PrintTransitions)fileMenu.getCommandMap().get("print")).setAutomatonId(automatonId);
+                    System.out.println("Automaton ID set to: " + automatonId);
+                    fileMenu.executeCommand(command + " " + automatonId);
+                    break;
+                default:
+                    fileMenu.executeCommand(command);
+                    break;
+            }
         }
 
         scanner.close();

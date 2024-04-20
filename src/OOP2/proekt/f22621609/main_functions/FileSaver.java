@@ -28,7 +28,7 @@ public class FileSaver implements FileHandler {
     private void saveToFile(String fileName, StringBuilder fileContent) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             writer.write(fileContent.toString());
-            System.out.println("Successfully saved " + new File(fileName).getName());
+            System.out.println("Successfully saved to " + fileName);
         } catch (IOException e) {
             System.out.println("Error saving the file: " + e.getMessage());
         }

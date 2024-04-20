@@ -1,7 +1,7 @@
 package OOP2.proekt.f22621609.secondary_functions;
 
 import OOP2.proekt.f22621609.FiniteAutomaton;
-import OOP2.proekt.f22621609.State;
+import OOP2.proekt.f22621609.avtomat.State;
 
 public class DeterministicCommand {
     private FiniteAutomaton automaton;

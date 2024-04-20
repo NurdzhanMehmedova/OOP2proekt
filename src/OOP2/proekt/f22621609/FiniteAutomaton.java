@@ -1,5 +1,7 @@
 package OOP2.proekt.f22621609;
 
+import OOP2.proekt.f22621609.avtomat.State;
+
 import java.io.*;
 import java.util.*;
 
