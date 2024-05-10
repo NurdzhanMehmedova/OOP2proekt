@@ -22,5 +22,5 @@ public class Automaton {
     public List<Transition> getTransitions() {
         return this.transitions;
     }
-    // Гетъри и сетъри
+
 }

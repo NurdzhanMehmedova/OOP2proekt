@@ -22,9 +22,9 @@ public class FileSaverAs implements FileHandler {
     }
 
     private void saveToFile(String fileName, StringBuilder fileContent) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName + ".txt"))) {
             writer.write(fileContent.toString());
-            System.out.println("Successfully saved as " + new File(fileName).getName());
+            System.out.println("Successfully saved as " + fileName + ".txt");
         } catch (IOException e) {
             System.out.println("Error saving the file: " + e.getMessage());
         }

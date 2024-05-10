@@ -1,37 +1,30 @@
 package OOP2.proekt.f22621609.secondary_functions;
 
 import OOP2.proekt.f22621609.FiniteAutomaton;
-import OOP2.proekt.f22621609.avtomat.State;
+import OOP2.proekt.f22621609.contracts.FileHandler;
 
-public class DeterministicCommand {
+public class DeterministicCommand implements FileHandler {
     private FiniteAutomaton automaton;
+    private String automatonId;
 
     public DeterministicCommand(FiniteAutomaton automaton) {
         this.automaton = automaton;
     }
 
-    public void execute() {
-        // Проверка дали автомата е детерминиран
-        boolean isDeterministic = true;
+    public void setAutomatonId(String automatonId) {
+        this.automatonId = automatonId;
+    }
+    public void setAutomaton(FiniteAutomaton automaton) {
+        this.automaton = automaton;
+    }
 
-        for (State state : automaton.getStates()) {
-            for (char symbol : automaton.getAlphabet()) {
-                if (automaton.getTransitions().containsKey(state) && automaton.getTransitions().get(state).containsKey(symbol)) {
-                    if (automaton.getTransitions().get(state).get(symbol).size() > 1) {
-                        isDeterministic = false;
-                        break;
-                    }
-                }
-            }
-            if (!isDeterministic) {
-                break;
-            }
-        }
-
-        if (isDeterministic) {
-            System.out.println("The automaton is deterministic.");
+    @Override
+    public void processing() {
+        if (automaton.isDeterministic()) {
+            System.out.println("Automaton with ID " + automatonId + " is deterministic.");
         } else {
-            System.out.println("The automaton is not deterministic.");
+            System.out.println("Automaton with ID " + automatonId + " is not deterministic.");
         }
     }
 }
+

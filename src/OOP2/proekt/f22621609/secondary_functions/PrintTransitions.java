@@ -1,5 +1,6 @@
 package OOP2.proekt.f22621609.secondary_functions;
 
+import OOP2.proekt.f22621609.FiniteAutomaton;
 import OOP2.proekt.f22621609.avtomat.Automaton;
 import OOP2.proekt.f22621609.avtomat.State;
 import OOP2.proekt.f22621609.avtomat.Transition;
@@ -8,6 +9,8 @@ import OOP2.proekt.f22621609.main_functions.FileOpener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class PrintTransitions implements FileHandler {
     private FileOpener fileOpener;
@@ -15,6 +18,9 @@ public class PrintTransitions implements FileHandler {
 
     public PrintTransitions(FileOpener fileOpener) {
         this.fileOpener = fileOpener;
+    }
+
+    public PrintTransitions(FiniteAutomaton concatenatedAutomaton) {
     }
 
     public void setAutomatonId(String automatonId) {
@@ -48,7 +54,6 @@ public class PrintTransitions implements FileHandler {
         }
     }
 
-    // Implement a method to parse Automaton from file content for a specific ID
     private Automaton parseAutomaton(String fileContent, String automatonId) {
         List<State> states = new ArrayList<>();
         List<String> alphabet = new ArrayList<>();
@@ -56,56 +61,44 @@ public class PrintTransitions implements FileHandler {
         List<State> finalStates = new ArrayList<>();
         List<Transition> transitions = new ArrayList<>();
 
-        // Инициализираме променливи за преходите
-        boolean transitionsSection = false;
-        boolean transitionsStarted = false;
+        String automatonRegex = "<automaton id=\"" + automatonId + "\"(?:.|\\s)*?</automaton>";
+        String stateRegex = "<state id=\"(\\w+)\" name=\"(\\w+)\"\\s*/>";
+        String transitionRegex = "<transition>\\s*<fromState>(\\w+)</fromState>\\s*<toState>(\\w+)</toState>\\s*<inputSymbol>(\\w+)</inputSymbol>\\s*</transition>";
 
-        String[] lines = fileContent.split("\n");
-        for (String line : lines) {
-            String trimmedLine = line.trim();
-            if (trimmedLine.isEmpty()) {
-                continue;
+        Pattern automatonPattern = Pattern.compile(automatonRegex);
+        Matcher automatonMatcher = automatonPattern.matcher(fileContent);
+
+        if (automatonMatcher.find()) {
+            String automatonText = automatonMatcher.group(0);
+
+            // Извличане на състоянията
+            Pattern statePattern = Pattern.compile(stateRegex);
+            Matcher stateMatcher = statePattern.matcher(automatonText);
+            while (stateMatcher.find()) {
+                String stateId = stateMatcher.group(1);
+                String stateName = stateMatcher.group(2);
+                states.add(new State(stateId, stateName));
             }
 
-            if (!transitionsSection) {
-                if (trimmedLine.startsWith("<automaton id=\"" + automatonId + "\"")) {
-                    transitionsSection = true; // Намерихме секцията с автомата
-                }
-            } else {
-                if (!transitionsStarted) {
-                    if (trimmedLine.startsWith("<states>")) {
-                        continue; // Пропускаме тага <states>
-                    } else if (trimmedLine.startsWith("<alphabet>")) {
-                        continue; // Пропускаме тага <alphabet>
-                    } else if (trimmedLine.startsWith("<initialState>")) {
-                        String initialStateId = trimmedLine.substring(trimmedLine.indexOf(">") + 1, trimmedLine.indexOf("</"));
-                        initialState = new State(initialStateId, "State " + initialStateId);
-                    } else if (trimmedLine.startsWith("<finalStates>")) {
-                        continue; // Пропускаме тага <finalStates>
-                    } else if (trimmedLine.startsWith("<transitions>")) {
-                        transitionsStarted = true; // Намерихме началото на секцията с преходите
-                    }
-                } else {
-                    if (trimmedLine.startsWith("</transitions>")) {
-                        break; // Край на секцията с преходите
-                    } else {
-                        // Извличаме информацията за преходите
-                        if (trimmedLine.startsWith("<transition>")) {
-                            String[] parts = trimmedLine.split("\">|<");
-                            if (parts.length == 5) {
-                                String fromStateId = parts[1].substring(parts[1].indexOf(">") + 1);
-                                String inputSymbol = parts[3];
-                                String toStateId = parts[4].substring(0, parts[4].indexOf("<"));
-                                State fromState = new State(fromStateId, "State " + fromStateId);
-                                State toState = new State(toStateId, "State " + toStateId);
-                                transitions.add(new Transition(fromState, toState, inputSymbol));
-                            }
-                        }
-                    }
+            // Извличане на преходите
+            Pattern transitionPattern = Pattern.compile(transitionRegex);
+            Matcher transitionMatcher = transitionPattern.matcher(automatonText);
+            while (transitionMatcher.find()) {
+                String fromStateId = transitionMatcher.group(1);
+                String toStateId = transitionMatcher.group(2);
+                String inputSymbol = transitionMatcher.group(3);
+                State fromState = new State(fromStateId, "");
+                State toState = new State(toStateId, "");
+                transitions.add(new Transition(fromState, toState, inputSymbol));
+                if (!alphabet.contains(inputSymbol)) {
+                    alphabet.add(inputSymbol);
                 }
             }
+
+            // Създаване на обект Automaton
+            return new Automaton(states, alphabet, initialState, finalStates, transitions);
         }
 
-        return new Automaton(states, alphabet, initialState, finalStates, transitions);
+        return null;
     }
 }

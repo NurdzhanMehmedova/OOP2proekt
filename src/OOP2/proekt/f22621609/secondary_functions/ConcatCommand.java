@@ -2,11 +2,12 @@ package OOP2.proekt.f22621609.secondary_functions;
 
 import OOP2.proekt.f22621609.FiniteAutomaton;
 import OOP2.proekt.f22621609.avtomat.State;
+import OOP2.proekt.f22621609.contracts.FileHandler;
 
 import java.util.Map;
 import java.util.Set;
 
-public class ConcatCommand {
+public class ConcatCommand implements FileHandler {
     private FiniteAutomaton automaton1;
     private FiniteAutomaton automaton2;
 
@@ -14,8 +15,16 @@ public class ConcatCommand {
         this.automaton1 = automaton1;
         this.automaton2 = automaton2;
     }
+    public void setAutomaton1(FiniteAutomaton automaton1) {
+        this.automaton1 = automaton1;
+    }
 
-    public void execute() {
+    public void setAutomaton2(FiniteAutomaton automaton2) {
+        this.automaton2 = automaton2;
+    }
+
+    @Override
+    public void processing() {
         // Намиране на конкатенацията на двата автомата
         FiniteAutomaton concatenatedAutomaton = new FiniteAutomaton();
 
@@ -81,7 +90,7 @@ public class ConcatCommand {
 
         // Показване на информация за новия автомат
         System.out.println("Concatenated Automaton:");
-        PrintCommand printCommand = new PrintCommand(concatenatedAutomaton);
-        printCommand.execute();
+        PrintTransitions printCommand = new PrintTransitions(concatenatedAutomaton);
+        printCommand.processing();
     }
 }
