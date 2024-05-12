@@ -1,6 +1,6 @@
 package OOP2.proekt.f22621609.main_functions;
 
-import OOP2.proekt.f22621609.FiniteAutomaton;
+import OOP2.proekt.f22621609.avtomat.Automaton;
 import OOP2.proekt.f22621609.contracts.FileHandler;
 import OOP2.proekt.f22621609.secondary_functions.*;
 
@@ -8,19 +8,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class FileMenu {
-    private FiniteAutomaton automaton;
     private Map<String, FileHandler> commandMap = new HashMap<>();
     private StringBuilder fileContent = new StringBuilder();
     private String currentFileName = "";
-    private Map<String, FiniteAutomaton> automatonMap = new HashMap<>();
+    private Automaton automaton; // Declare Automaton instance
+    private AutomatonFileSaver automatonFileSaver; // Declare AutomatonFileSaver instance
+    private CheckEmptyLanguage checkEmptyLanguage; // Declare CheckEmptyLanguage instance
+    private CheckDeterministic checkDeterministic; // Declare CheckDeterministic instance
+    private RecognizeWord recognizeWord; // Declare RecognizeWord instance
+    private CheckFiniteLanguage checkFiniteLanguage;
 
-
-    public void setAutomaton(FiniteAutomaton automaton) {
-        this.automaton = automaton;
-    }
-    public FiniteAutomaton getAutomaton(String automatonId) {
-        return automatonMap.get(automatonId); // Вземане на автомат по идентификатор
-    }
     public FileMenu() {
         commandMap.put("close", new FileCloser(fileContent));
         commandMap.put("exit", new ExitProgram());
@@ -29,23 +26,42 @@ public class FileMenu {
         commandMap.put("save", new FileSaver("", fileContent));
         commandMap.put("saveas", new FileSaverAs("", fileContent));
         commandMap.put("list", new ListMachines(new FileOpener("", fileContent)));
-        commandMap.put("empty", new EmptyCommand(automaton));
-        commandMap.put("deterministic", new DeterministicCommand(automaton));
-        commandMap.put("recognize", new RecognizeCommand(automaton));
-        commandMap.put("concat", new ConcatCommand(null, null)); // null за сега, ще се зададат по-късно
+
 
         // Add PrintTransitions instance to the command map
         FileOpener fileOpenerForPrint = new FileOpener("", fileContent);
         PrintTransitions printTransitions = new PrintTransitions(fileOpenerForPrint);
-        commandMap.put("print", printTransitions);
-        commandMap.put("saveauto", new SaveAutomaton(automatonMap, null, null));
+        commandMap.put("print", printTransitions); // 2
 
+        // Initialize AutomatonFileSaver instance
+        automatonFileSaver = new AutomatonFileSaver(fileContent); // Initialize AutomatonFileSaver
+        commandMap.put("saveauto", automatonFileSaver); // Add AutomatonFileSaver instance to command map
+
+        // Initialize CheckEmptyLanguage instance
+        FileOpener fileOpenerForCheckEmpty = new FileOpener("", fileContent);
+        checkEmptyLanguage = new CheckEmptyLanguage(fileOpenerForCheckEmpty);
+        commandMap.put("checkempty", checkEmptyLanguage); // Add CheckEmptyLanguage instance to command map
+
+        // Initialize CheckDeterministic instance
+        FileOpener fileOpenerForCheckDeterministic = new FileOpener("", fileContent);
+        checkDeterministic = new CheckDeterministic(fileOpenerForCheckDeterministic);
+        commandMap.put("checkdeterministic", checkDeterministic); // Add CheckDeterministic instance to command map
+
+        // Initialize RecognizeWord instance
+        FileOpener fileOpenerForRecognizeWord = new FileOpener("", fileContent);
+        recognizeWord = new RecognizeWord(fileOpenerForRecognizeWord);
+        commandMap.put("recognize", recognizeWord); // Add RecognizeWord instance to command map
+
+        // Initialize CheckFiniteLanguage instance
+        FileOpener fileOpenerForCheckFinite = new FileOpener("", fileContent);
+        this.checkFiniteLanguage = new CheckFiniteLanguage(fileOpenerForCheckFinite);
+        commandMap.put("checkfinite", checkFiniteLanguage); // Add CheckFiniteLanguage instance to command map
     }
+
 
 
     public void executeCommand(String command) {
         String[] parts = command.split("\\s+", 2);
-
         String commandName = parts[0].toLowerCase();
         String argument = parts.length > 1 ? parts[1] : "";
 
@@ -62,35 +78,27 @@ public class FileMenu {
             }
             return;
         }
-        if (commandName.equals("empty")) {
-            if (automaton != null) { // Check if automaton is not null
-                EmptyCommand emptyCommand = new EmptyCommand(automaton);
-                emptyCommand.processing();
-            } else {
-                System.out.println("Automaton not initialized.");
-            }
+        if (commandName.equals("saveauto")) {
+            automatonFileSaver.processing(); // Call the processing method of AutomatonFileSaver
             return;
         }
-
-        if (commandName.equals("deterministic")) {
-            // Проверка дали автоматът е инициализиран преди да се извика DeterministicCommand
-            if (automaton == null) {
-                System.out.println("No automaton is set. Please set an automaton first.");
-                return;
-            }
-            // Извикване на DeterministicCommand със съответния автомат
-            DeterministicCommand deterministicCommand = (DeterministicCommand) commandMap.get("deterministic");
-            deterministicCommand.setAutomaton(automaton);
-            deterministicCommand.setAutomatonId(argument);
-            deterministicCommand.processing();
+        if (commandName.equals("checkempty")) {
+            checkEmptyLanguage.processing(); // Call the processing method of CheckEmptyLanguage
+            return;
+        }
+        if (commandName.equals("checkdeterministic")) {
+            checkDeterministic.processing(); // Call the processing method of CheckDeterministic
             return;
         }
         if (commandName.equals("recognize")) {
-            RecognizeCommand recognizeCommand = (RecognizeCommand) commandMap.get("recognize");
-            // Извикване на метод за разпознаване на дума от автомата
-            recognizeCommand.processing();
+            recognizeWord.processing(); // Call the processing method of RecognizeWord
             return;
         }
+        if (commandName.equals("checkfinite")) {
+            checkFiniteLanguage.processing(); // Call the processing method of CheckFiniteLanguage
+            return;
+        }
+
 
         FileHandler cmd = commandMap.get(commandName);
         if (cmd != null) {
@@ -112,17 +120,17 @@ public class FileMenu {
             System.out.println("Unknown command: " + commandName);
         }
     }
+
     public Map<String, FileHandler> getCommandMap() {
         return commandMap;
     }
 
     private PrintTransitions findPrintTransitionsInstance(String automatonId) {
-        // Search for the PrintTransitions instance associated with the automaton ID
         for (FileHandler handler : commandMap.values()) {
             if (handler instanceof PrintTransitions) {
                 PrintTransitions printTransitions = (PrintTransitions) handler;
                 String transitionAutomatonId = printTransitions.getAutomatonId();
-                if (transitionAutomatonId != null && transitionAutomatonId.equals(automatonId)){
+                if (transitionAutomatonId != null && transitionAutomatonId.equals(automatonId)) {
                     return printTransitions;
                 }
             }

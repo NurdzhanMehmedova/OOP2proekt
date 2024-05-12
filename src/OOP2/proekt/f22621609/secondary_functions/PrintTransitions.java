@@ -1,6 +1,5 @@
 package OOP2.proekt.f22621609.secondary_functions;
 
-import OOP2.proekt.f22621609.FiniteAutomaton;
 import OOP2.proekt.f22621609.avtomat.Automaton;
 import OOP2.proekt.f22621609.avtomat.State;
 import OOP2.proekt.f22621609.avtomat.Transition;
@@ -20,9 +19,6 @@ public class PrintTransitions implements FileHandler {
         this.fileOpener = fileOpener;
     }
 
-    public PrintTransitions(FiniteAutomaton concatenatedAutomaton) {
-    }
-
     public void setAutomatonId(String automatonId) {
         this.automatonId = automatonId;
     }
@@ -33,6 +29,7 @@ public class PrintTransitions implements FileHandler {
 
     @Override
     public void processing() {
+        System.out.println("Automaton ID: " + automatonId); // Debug output
         StringBuilder fileContent = fileOpener.getFileContent();
         if (fileContent != null) {
             if (automatonId != null && !automatonId.isEmpty()) {
@@ -55,24 +52,19 @@ public class PrintTransitions implements FileHandler {
     }
 
     private Automaton parseAutomaton(String fileContent, String automatonId) {
-        List<State> states = new ArrayList<>();
-        List<String> alphabet = new ArrayList<>();
-        State initialState = null;
-        List<State> finalStates = new ArrayList<>();
-        List<Transition> transitions = new ArrayList<>();
-
-        String automatonRegex = "<automaton id=\"" + automatonId + "\"(?:.|\\s)*?</automaton>";
-        String stateRegex = "<state id=\"(\\w+)\" name=\"(\\w+)\"\\s*/>";
-        String transitionRegex = "<transition>\\s*<fromState>(\\w+)</fromState>\\s*<toState>(\\w+)</toState>\\s*<inputSymbol>(\\w+)</inputSymbol>\\s*</transition>";
-
+        String automatonRegex = "<automaton\\s+id=\"" + automatonId + "\"(?:.|\\s)*?</automaton>";
         Pattern automatonPattern = Pattern.compile(automatonRegex);
         Matcher automatonMatcher = automatonPattern.matcher(fileContent);
 
         if (automatonMatcher.find()) {
             String automatonText = automatonMatcher.group(0);
 
-            // Извличане на състоянията
-            Pattern statePattern = Pattern.compile(stateRegex);
+            List<State> states = new ArrayList<>();
+            List<String> alphabet = new ArrayList<>();
+            List<Transition> transitions = new ArrayList<>();
+
+            // Extract states
+            Pattern statePattern = Pattern.compile("<state id=\"(\\w+)\" name=\"(\\w+)\"\\s*/>");
             Matcher stateMatcher = statePattern.matcher(automatonText);
             while (stateMatcher.find()) {
                 String stateId = stateMatcher.group(1);
@@ -80,25 +72,23 @@ public class PrintTransitions implements FileHandler {
                 states.add(new State(stateId, stateName));
             }
 
-            // Извличане на преходите
-            Pattern transitionPattern = Pattern.compile(transitionRegex);
+            // Extract transitions
+            Pattern transitionPattern = Pattern.compile("<transition>\\s*<fromState>(\\w+)</fromState>\\s*<toState>(\\w+)</toState>\\s*<inputSymbol>(\\w+)</inputSymbol>\\s*</transition>");
             Matcher transitionMatcher = transitionPattern.matcher(automatonText);
             while (transitionMatcher.find()) {
                 String fromStateId = transitionMatcher.group(1);
                 String toStateId = transitionMatcher.group(2);
                 String inputSymbol = transitionMatcher.group(3);
-                State fromState = new State(fromStateId, "");
-                State toState = new State(toStateId, "");
-                transitions.add(new Transition(fromState, toState, inputSymbol));
+                transitions.add(new Transition(new State(fromStateId, ""), new State(toStateId, ""), inputSymbol));
                 if (!alphabet.contains(inputSymbol)) {
                     alphabet.add(inputSymbol);
                 }
             }
 
-            // Създаване на обект Automaton
-            return new Automaton(states, alphabet, initialState, finalStates, transitions);
+            return new Automaton(states, alphabet, transitions, null, null);
         }
 
         return null;
     }
+
 }
