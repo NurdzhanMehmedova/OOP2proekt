@@ -22,8 +22,9 @@ public class FileHelper implements FileHandler {
         System.out.println("checkempty\t\t-checks if the machine language is empty");//4
         System.out.println("checkdeterministic\t\t-checks whether an automaton is deterministic");//5
         System.out.println("recognize\t\t-checks if a word is in the machine language");//6
+        System.out.println("un\t\t-finds the positive envelope of an automaton and creates a new automaton");//7
+        System.out.println("checkfinite\t\t-checks whether the language of a given automaton is finite");//8
 
-        System.out.println("print\t\t- prints the transitions");
         System.out.println("exit\t\t- exits the program");
     }
 }

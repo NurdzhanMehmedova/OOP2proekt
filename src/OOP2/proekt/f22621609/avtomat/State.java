@@ -1,6 +1,5 @@
 package OOP2.proekt.f22621609.avtomat;
 
-import java.io.Serializable;
 
 public class State {
     private String id;

@@ -9,7 +9,6 @@ import java.io.IOException;
 public class FileOpener implements FileHandler {
     private String fileName;
     private StringBuilder fileContent;
-
     public FileOpener(String fileName, StringBuilder fileContent) {
         this.fileName = fileName;
         this.fileContent = fileContent;
@@ -48,4 +47,5 @@ public class FileOpener implements FileHandler {
     public StringBuilder getFileContent() {
         return fileContent;
     }
+
 }

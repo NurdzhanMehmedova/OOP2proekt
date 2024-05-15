@@ -1,5 +1,6 @@
 package OOP2.proekt.f22621609.avtomat;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Automaton {
@@ -41,5 +42,4 @@ public class Automaton {
     public List<State> getFinalStates() {
         return finalStates;
     }
-
 }
