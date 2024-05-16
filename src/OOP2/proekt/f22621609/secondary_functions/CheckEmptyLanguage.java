@@ -37,12 +37,12 @@ public class CheckEmptyLanguage implements FileHandler {
     }
 
     private boolean isLanguageEmpty(String fileContent) {
-        // Check if there are any transitions
+        // Checking if there are any transitions
         if (!fileContent.contains("<transition>")) {
             return true; // No transitions found, language is empty
         }
 
-        // Check if there are any symbols in the alphabet
+        // Checking if there are any symbols in the alphabet
         Pattern symbolPattern = Pattern.compile("<symbol>(\\w+)</symbol>");
         Matcher symbolMatcher = symbolPattern.matcher(fileContent);
         return !symbolMatcher.find(); // Language is empty if no symbols found in the alphabet

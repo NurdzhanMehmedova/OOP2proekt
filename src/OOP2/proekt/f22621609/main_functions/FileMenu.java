@@ -154,6 +154,7 @@ public class FileMenu {
     private CheckFiniteLanguage checkFiniteLanguage;
     private PositiveWrapper positiveWrapper;
     private RegexAutomatonCreator regexAutomatonCreator;
+    private ConcatAutomata concatAutomaton;
 
     public FileMenu() {
         commandMap.put("close", new FileCloser(fileContent));
@@ -201,6 +202,10 @@ public class FileMenu {
         FileOpener fileOpenerForRegexWrapper = new FileOpener("", fileContent);
         regexAutomatonCreator = new RegexAutomatonCreator(fileOpenerForRegexWrapper);
         commandMap.put("reg",regexAutomatonCreator);
+
+        FileOpener fileOpenerForConcat = new FileOpener("", fileContent);
+        concatAutomaton = new ConcatAutomata(fileOpenerForConcat);
+        commandMap.put("concat",concatAutomaton);
     }
 
     public void executeCommand(String command) {
@@ -244,6 +249,10 @@ public class FileMenu {
         }
         if (commandName.equals("reg")){
             regexAutomatonCreator.processing();
+            return;
+        }
+        if (commandName.equals("concat")){
+            concatAutomaton.processing();
             return;
         }
 

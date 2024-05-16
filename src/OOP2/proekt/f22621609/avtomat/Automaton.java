@@ -42,4 +42,8 @@ public class Automaton {
     public List<State> getFinalStates() {
         return finalStates;
     }
+
+    public State getInitialState() {
+        return initialState;
+    }
 }
