@@ -34,11 +34,17 @@ import OOP2.proekt.f22621609.main_functions.FileMenu;
 import OOP2.proekt.f22621609.secondary_functions.*;
 
 import java.util.Scanner;
-
+/**
+ * Main class representing the application entry point.
+ */
 public class Application {
+    /**
+     * The main method to start the application.
+     *
+     * @param args command-line arguments
+     */
     public static void main(String[] args) {
         FileMenu fileMenu = new FileMenu();
-
         Scanner scanner = new Scanner(System.in);
         System.out.println("Current directory of files: " + System.getProperty("user.dir"));
         boolean running = true;

@@ -9,14 +9,27 @@ import OOP2.proekt.f22621609.main_functions.FileOpener;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
-
+/**
+ * Concatenates multiple automata into a single automaton.
+ */
 public class ConcatAutomata implements FileHandler {
+    /**
+     * FileOpener instance to open and read automaton files.
+     */
     private FileOpener fileOpener;
-
+    /**
+     * Constructs a ConcatAutomata object with the specified FileOpener instance.
+     *
+     * @param fileOpener the FileOpener instance to use for opening automaton files
+     */
     public ConcatAutomata(FileOpener fileOpener) {
         this.fileOpener = fileOpener;
     }
-
+    /**
+     * Processes the concatenation of automata.
+     * Asks the user to enter the IDs of the automata to concatenate.
+     * Concatenates the specified automata and saves the result to a new file.
+     */
     @Override
     public void processing() {
         Scanner scanner = new Scanner(System.in);
@@ -31,7 +44,13 @@ public class ConcatAutomata implements FileHandler {
             }
         }
     }
-
+    /**
+     * Concatenates the automata with the specified IDs.
+     *
+     * @param automatonIds the IDs of the automata to concatenate
+     * @param fileContent  the content of the file containing the automata
+     * @return the ID of the concatenated automaton if successful, {@code null} otherwise
+     */
     private String concatenateAutomata(String[] automatonIds, String fileContent) {
         List<Automaton> automata = new ArrayList<>();
         for (String id : automatonIds) {
@@ -51,7 +70,13 @@ public class ConcatAutomata implements FileHandler {
 
         return newAutomatonId;
     }
-
+    /**
+     * Parses the automaton with the specified ID from the file content.
+     *
+     * @param fileContent  the content of the file containing the automaton
+     * @param automatonId  the ID of the automaton to parse
+     * @return the parsed Automaton object if found, {@code null} otherwise
+     */
     private Automaton parseAutomaton(String fileContent, String automatonId) {
         String automatonStartTag = "<automaton id=\"" + automatonId + "\"";
         String automatonEndTag = "</automaton>";
@@ -71,13 +96,18 @@ public class ConcatAutomata implements FileHandler {
         State q1 = new State("q1", "State 1");
         State q2 = new State("q2", "State 2");
         List<State> states = Arrays.asList(q1, q2);
-        List<String> alphabet = Arrays.asList("a", "b");
+        List<String> alphabet = Arrays.asList("a", "b","c","d","1","0","5","e","f");
         List<Transition> transitions = Arrays.asList(new Transition(q1, q2, "a"));
         List<State> finalStates = Arrays.asList(q2);
 
         return new Automaton(states, alphabet, transitions, q1, finalStates);
     }
-
+    /**
+     * Combines the list of automata into a single automaton.
+     *
+     * @param automata the list of automata to combine
+     * @return the combined Automaton object
+     */
     private Automaton combineAutomata(List<Automaton> automata) {
         List<State> combinedStates = new ArrayList<>();
         List<String> combinedAlphabet = new ArrayList<>();
@@ -102,7 +132,13 @@ public class ConcatAutomata implements FileHandler {
 
         return new Automaton(combinedStates, combinedAlphabet, combinedTransitions, combinedInitialState, combinedFinalStates);
     }
-
+    /**
+     * Saves the automaton to a file with the specified file name.
+     *
+     * @param automaton     the Automaton object to save
+     * @param fileName      the name of the file to save to
+     * @param newAutomatonId the ID of the concatenated automaton
+     */
     private void saveAutomatonToFile(Automaton automaton, String fileName, String newAutomatonId) {
         try (FileWriter writer = new FileWriter(fileName)) {
             writer.write(automatonToXML(automaton, newAutomatonId));
@@ -110,7 +146,13 @@ public class ConcatAutomata implements FileHandler {
             e.printStackTrace();
         }
     }
-
+    /**
+     * Converts an Automaton object to XML format.
+     *
+     * @param automaton     the Automaton object to convert to XML
+     * @param newAutomatonId the ID of the new concatenated automaton
+     * @return the XML representation of the Automaton object
+     */
     private String automatonToXML(Automaton automaton, String newAutomatonId) {
         StringBuilder xmlBuilder = new StringBuilder();
         xmlBuilder.append("<automaton id=\"").append(newAutomatonId).append("\" name=\"Concatenated Automaton\">\n");

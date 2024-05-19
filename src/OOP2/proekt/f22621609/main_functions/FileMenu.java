@@ -141,7 +141,10 @@ import OOP2.proekt.f22621609.secondary_functions.*;
 
 import java.util.HashMap;
 import java.util.Map;
-
+/**
+ * The {@code FileMenu} class manages a set of file-related commands for an automaton application.
+ * It initializes various command handlers and executes commands based on user input.
+ */
 public class FileMenu {
     private Map<String, FileHandler> commandMap = new HashMap<>();
     private StringBuilder fileContent = new StringBuilder();
@@ -155,7 +158,10 @@ public class FileMenu {
     private PositiveWrapper positiveWrapper;
     private RegexAutomatonCreator regexAutomatonCreator;
     private ConcatAutomata concatAutomaton;
-
+    //private Union unionAutomaton;
+    /**
+     * Constructs a {@code FileMenu} and initializes the command handlers.
+     */
     public FileMenu() {
         commandMap.put("close", new FileCloser(fileContent));
         commandMap.put("exit", new ExitProgram());
@@ -206,8 +212,16 @@ public class FileMenu {
         FileOpener fileOpenerForConcat = new FileOpener("", fileContent);
         concatAutomaton = new ConcatAutomata(fileOpenerForConcat);
         commandMap.put("concat",concatAutomaton);
-    }
 
+//        FileOpener fileOpenerForUnion = new FileOpener("",fileContent);
+//        //unionAutomaton = new Union(fileOpenerForUnion);
+//        commandMap.put("union",unionAutomaton);
+    }
+    /**
+     * Executes the specified command.
+     *
+     * @param command the command to execute
+     */
     public void executeCommand(String command) {
         String[] parts = command.split("\\s+", 2);
         String commandName = parts[0].toLowerCase();
@@ -255,6 +269,10 @@ public class FileMenu {
             concatAutomaton.processing();
             return;
         }
+//        if (commandName.equals("union")){
+//            unionAutomaton.processing();
+//            return;
+//        }
 
         FileHandler cmd = commandMap.get(commandName);
         if (cmd != null) {
@@ -276,11 +294,20 @@ public class FileMenu {
             System.out.println("Unknown command: " + commandName);
         }
     }
-
+    /**
+     * Returns the command map containing the supported commands.
+     *
+     * @return the command map
+     */
     public Map<String, FileHandler> getCommandMap() {
         return commandMap;
     }
-
+    /**
+     * Finds the {@code PrintTransitions} instance associated with the specified automaton ID.
+     *
+     * @param automatonId the ID of the automaton
+     * @return the {@code PrintTransitions} instance, or null if not found
+     */
     private PrintTransitions findPrintTransitionsInstance(String automatonId) {
         for (FileHandler handler : commandMap.values()) {
             if (handler instanceof PrintTransitions) {

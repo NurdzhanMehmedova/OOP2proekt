@@ -3,14 +3,24 @@ package OOP2.proekt.f22621609.secondary_functions;
 import OOP2.proekt.f22621609.contracts.FileHandler;
 
 import java.io.*;
-
+/**
+ * The {@code AutomatonFileSaver} class implements the {@link FileHandler} interface
+ * to handle the saving of automaton information to a file.
+ */
 public class AutomatonFileSaver implements FileHandler {
     private StringBuilder fileContent;
-
+    /**
+     * Constructs an {@code AutomatonFileSaver} object with the specified file content.
+     *
+     * @param fileContent the {@code StringBuilder} containing the automaton information
+     */
     public AutomatonFileSaver(StringBuilder fileContent) {
         this.fileContent = fileContent;
     }
-
+    /**
+     * Processes the input to save the automaton information to a file.
+     * Prompts the user to enter the automaton ID and the filename to save.
+     */
     @Override
     public void processing() {
         try (BufferedReader reader = new BufferedReader(new StringReader(fileContent.toString()))) {
@@ -25,7 +35,12 @@ public class AutomatonFileSaver implements FileHandler {
             System.out.println("Error processing input: " + e.getMessage());
         }
     }
-
+    /**
+     * Saves the automaton with the specified ID to a file with the given filename.
+     *
+     * @param automatonId the ID of the automaton to save
+     * @param filename    the filename to save the automaton to
+     */
     public void saveAutomatonToFile(String automatonId, String filename) {
         try (BufferedReader reader = new BufferedReader(new StringReader(fileContent.toString())); // Update to read from StringBuilder
              BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {

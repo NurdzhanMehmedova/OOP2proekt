@@ -6,14 +6,24 @@ import OOP2.proekt.f22621609.main_functions.FileOpener;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+/**
+ * The {@code CheckEmptyLanguage} class implements the {@link FileHandler} interface
+ * to check if the language of an automaton described in a file is empty.
+ */
 public class CheckEmptyLanguage implements FileHandler {
     private FileOpener fileOpener;
-
+    /**
+     * Constructs a {@code CheckEmptyLanguage} object with the specified {@link FileOpener}.
+     *
+     * @param fileOpener the {@code FileOpener} instance used to open files
+     */
     public CheckEmptyLanguage(FileOpener fileOpener) {
         this.fileOpener = fileOpener;
     }
-
+    /**
+     * Processes the input to check if the language of the automaton described in the file is empty.
+     * Prompts the user to enter the ID of the automaton to check.
+     */
     @Override
     public void processing() {
         Scanner scanner = new Scanner(System.in);
@@ -35,6 +45,12 @@ public class CheckEmptyLanguage implements FileHandler {
             }
         }
     }
+    /**
+     * Checks if the language of the automaton described in the file is empty.
+     *
+     * @param fileContent the content of the file containing automaton descriptions
+     * @return {@code true} if the language is empty, {@code false} otherwise
+     */
 
     private boolean isLanguageEmpty(String fileContent) {
         // Checking if there are any transitions

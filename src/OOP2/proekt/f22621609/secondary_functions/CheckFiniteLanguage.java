@@ -6,14 +6,24 @@ import OOP2.proekt.f22621609.main_functions.FileOpener;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+/**
+ * The {@code CheckFiniteLanguage} class implements the {@link FileHandler} interface
+ * to check if the language recognized by an automaton described in a file is finite.
+ */
 public class CheckFiniteLanguage implements FileHandler {
     private FileOpener fileOpener;
-
+    /**
+     * Constructs a {@code CheckFiniteLanguage} object with the specified {@link FileOpener}.
+     *
+     * @param fileOpener the {@code FileOpener} instance used to open files
+     */
     public CheckFiniteLanguage(FileOpener fileOpener) {
         this.fileOpener = fileOpener;
     }
-
+    /**
+     * Processes the input to check if the language recognized by the automaton described in the file is finite.
+     * Prompts the user to enter the ID of the automaton to check.
+     */
     @Override
     public void processing() {
         Scanner scanner = new Scanner(System.in);
@@ -36,7 +46,12 @@ public class CheckFiniteLanguage implements FileHandler {
             System.out.println("No automaton found. Please open an automaton first.");
         }
     }
-
+    /**
+     * Checks if the language recognized by the automaton described in the file is finite.
+     *
+     * @param automatonId the ID of the automaton to check
+     * @return {@code true} if the language is finite, {@code false} otherwise
+     */
     private boolean isFiniteAutomaton(String automatonId) {
         StringBuilder fileContent = fileOpener.getFileContent();
         if (fileContent == null) {
@@ -78,7 +93,12 @@ public class CheckFiniteLanguage implements FileHandler {
             return true;
         }
     }
-
+    /**
+     * Extracts the final state of the automaton from the specified automaton content.
+     *
+     * @param automatonContent the content of the automaton in XML format
+     * @return the ID of the final state if found, {@code null} otherwise
+     */
     private String extractFinalState(String automatonContent) {
         String finalState = null;
         Pattern pattern = Pattern.compile("<finalStates>.*?<state.*?id=\"(.*?)\"", Pattern.DOTALL);
@@ -88,7 +108,13 @@ public class CheckFiniteLanguage implements FileHandler {
         }
         return finalState;
     }
-
+    /**
+     * Extracts the content of the specified tag from the input XML string.
+     *
+     * @param input   the input XML string
+     * @param tagName the name of the tag to extract content from
+     * @return the content of the specified tag if found, {@code null} otherwise
+     */
 
     private String extractTagContent(String input, String tagName) {
         // Define the pattern to match the opening and closing tags

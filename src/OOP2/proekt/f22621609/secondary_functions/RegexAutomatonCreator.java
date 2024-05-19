@@ -9,21 +9,39 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Stack;
-
+/**
+ * Handles the creation of an automaton from a regular expression.
+ * This class implements the {@link FileHandler} interface to perform processing on file content.
+ */
 public class RegexAutomatonCreator implements FileHandler {
     private int stateCount;
     private Map<Character, Integer> symbolMap;
     private FileOpener fileOpener;
-
+    /**
+     * Constructs a new RegexAutomatonCreator object with the specified FileOpener.
+     *
+     * @param fileOpener the FileOpener instance to retrieve file content
+     */
     public RegexAutomatonCreator(FileOpener fileOpener) {
         stateCount = 0;
         symbolMap = new HashMap<>();
     }
-
+    /**
+     * Creates a new state and returns its ID.
+     *
+     * @return the ID of the newly created state
+     */
     private int createState() {
         return ++stateCount;
     }
 
+    /**
+     * Adds a transition between two states with the specified symbol.
+     *
+     * @param from   the ID of the source state
+     * @param to     the ID of the destination state
+     * @param symbol the transition symbol (null represents an epsilon transition)
+     */
     private void addTransition(int from, int to, Character symbol) {
         if (symbol == null) return; // Null symbol represents an epsilon transition
         if (!symbolMap.containsKey(symbol)) {
@@ -33,7 +51,11 @@ public class RegexAutomatonCreator implements FileHandler {
         // Print or store the transition information as needed
         System.out.println("Transition from state " + from + " to state " + to + " on symbol " + symbol);
     }
-
+    /**
+     * Processes the regular expression provided by the user to create an automaton.
+     * Prompts the user to input the regular expression, then constructs the automaton
+     * based on the given expression and saves it to a file.
+     */
     @Override
     public void processing() {
         Scanner scanner = new Scanner(System.in);
@@ -77,7 +99,11 @@ public class RegexAutomatonCreator implements FileHandler {
         // Display the ID of the automaton
         System.out.println("Automaton created successfully with ID: auto" + finalState);
     }
-
+    /**
+     * Saves the automaton to an XML file.
+     *
+     * @param finalState the ID of the final state of the automaton
+     */
     private void saveAutomatonToFile(int finalState) {
         try (FileWriter writer = new FileWriter("automaton_auto" + finalState + ".xml")) {
             // Construct the XML content representing the automaton
@@ -99,7 +125,6 @@ public class RegexAutomatonCreator implements FileHandler {
             xmlContent.append("\t\t<state id=\"q").append(finalState).append("\" name=\"State ").append(finalState).append("\"/>\n");
             xmlContent.append("\t</finalStates>\n");
             xmlContent.append("\t<transitions>\n");
-            // You need to add transition details here
             xmlContent.append("\t</transitions>\n");
             xmlContent.append("</automaton>");
 

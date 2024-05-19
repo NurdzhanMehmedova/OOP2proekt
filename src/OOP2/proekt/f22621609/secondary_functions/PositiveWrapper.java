@@ -8,14 +8,29 @@ import java.io.IOException;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+/**
+ * A class to create a positive wrapper for an automaton based on a given ID.
+ * Implements the {@link FileHandler} interface to perform file handling operations.
+ */
 public class PositiveWrapper implements FileHandler {
+    /**
+     * Instance of {@link FileOpener} used to retrieve the content of the file.
+     */
     private FileOpener fileOpener;
-
+    /**
+     * Constructs a new PositiveWrapper object with the specified FileOpener.
+     *
+     * @param fileOpener the FileOpener instance to use for accessing the file content
+     */
     public PositiveWrapper(FileOpener fileOpener) {
         this.fileOpener = fileOpener;
     }
-
+    /**
+     * Processes the content of the file to create a positive wrapper for an automaton.
+     * Prompts the user to enter the ID of the automaton.
+     * Checks if the provided automaton ID is valid.
+     * If valid, creates a positive wrapper for the automaton and writes it to a file.
+     */
     @Override
     public void processing() {
         Scanner scanner = new Scanner(System.in);
@@ -44,12 +59,25 @@ public class PositiveWrapper implements FileHandler {
             System.out.println("No file content found.");
         }
     }
-
+    /**
+     * Checks if the provided automaton ID exists in the given file content.
+     *
+     * @param fileContent the content of the file containing automaton definitions
+     * @param automatonId the ID of the automaton to check
+     * @return true if the automaton ID is valid, false otherwise
+     */
     private boolean isValidAutomatonId(String fileContent, String automatonId) {
         String automatonPattern = "<automaton\\s+id=\"" + automatonId + "\"[^>]*>";
         return fileContent.matches("(?s).*" + automatonPattern + ".*");
     }
-
+    /**
+     * Finds the automaton block corresponding to the provided ID and creates a positive wrapper for it.
+     * The positive wrapper is created by swapping the fromState and toState in each transition of the automaton.
+     *
+     * @param fileContent the content of the file containing automaton definitions
+     * @param automatonId the ID of the automaton to create a positive wrapper of
+     * @return the positive wrapper XML string if successful, null otherwise
+     */
     private String findPositiveWrapper(String fileContent, String automatonId) {
         String automatonStartPattern = "<automaton\\s+id=\"" + automatonId + "\"[^>]*>";
         String transitionsStartPattern = "<transitions>";
@@ -90,7 +118,12 @@ public class PositiveWrapper implements FileHandler {
         );
         return positiveWrapperXml.toString();
     }
-
+    /**
+     * Extracts the initial state ID from the given automaton XML.
+     *
+     * @param automatonXml the XML string representing the automaton
+     * @return the ID of the initial state if found, or null if not found
+     */
     private String extractInitialStates(String automatonXml) {
         Pattern pattern = Pattern.compile("<initialState>(.*?)</initialState>");
         Matcher matcher = pattern.matcher(automatonXml);
@@ -99,7 +132,12 @@ public class PositiveWrapper implements FileHandler {
         }
         return null;
     }
-
+    /**
+     * Creates positive wrapper transitions by swapping the fromState and toState in each transition XML string.
+     *
+     * @param transitionsXml the XML string representing the transitions of the automaton
+     * @return the XML string representing the positive wrapper transitions
+     */
     private String createPositiveWrapperTransitions(String transitionsXml) {
         String transitionPattern = "<transition>.*?</transition>";
 
@@ -124,8 +162,13 @@ public class PositiveWrapper implements FileHandler {
 
         return positiveWrapperTransitions.toString();
     }
-
-
+    /**
+     * Extracts the content of the specified XML tag from the input XML string.
+     *
+     * @param input    the XML string from which to extract the content
+     * @param tagName  the name of the XML tag to extract the content from
+     * @return the content of the specified XML tag if found, or null if not found
+     */
     private String extractTagContent(String input, String tagName) {
         Pattern pattern = Pattern.compile("<" + tagName + ">(.*?)</" + tagName + ">");
         Matcher matcher = pattern.matcher(input);
