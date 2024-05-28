@@ -1,155 +1,20 @@
 package OOP2.proekt.f22621609.main_functions;
 
-/*import OOP2.proekt.f22621609.avtomat.Automaton;
 import OOP2.proekt.f22621609.contracts.FileHandler;
+import OOP2.proekt.f22621609.enums.CommandType;
 import OOP2.proekt.f22621609.secondary_functions.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class FileMenu {
-    private Map<String, FileHandler> commandMap = new HashMap<>();
-    private StringBuilder fileContent = new StringBuilder();
-    private String currentFileName = "";
-    private Automaton automaton; // Declare Automaton instance
-    private AutomatonFileSaver automatonFileSaver; // Declare AutomatonFileSaver instance
-    private CheckEmptyLanguage checkEmptyLanguage; // Declare CheckEmptyLanguage instance
-    private CheckDeterministic checkDeterministic; // Declare CheckDeterministic instance
-    private RecognizeWord recognizeWord; // Declare RecognizeWord instance
-    private CheckFiniteLanguage checkFiniteLanguage;
-
-    public FileMenu() {
-        commandMap.put("close", new FileCloser(fileContent));
-        commandMap.put("exit", new ExitProgram());
-        commandMap.put("help", new FileHelper());
-        commandMap.put("open", new FileOpener("", fileContent));
-        commandMap.put("save", new FileSaver("", fileContent));
-        commandMap.put("saveas", new FileSaverAs("", fileContent));
-        commandMap.put("list", new ListMachines(new FileOpener("", fileContent)));
-
-
-        // Add PrintTransitions instance to the command map
-        FileOpener fileOpenerForPrint = new FileOpener("", fileContent);
-        PrintTransitions printTransitions = new PrintTransitions(fileOpenerForPrint);
-        commandMap.put("print", printTransitions); // 2
-
-        // Initialize AutomatonFileSaver instance
-        automatonFileSaver = new AutomatonFileSaver(fileContent); // Initialize AutomatonFileSaver
-        commandMap.put("saveauto", automatonFileSaver); // Add AutomatonFileSaver instance to command map
-
-        // Initialize CheckEmptyLanguage instance
-        FileOpener fileOpenerForCheckEmpty = new FileOpener("", fileContent);
-        checkEmptyLanguage = new CheckEmptyLanguage(fileOpenerForCheckEmpty);
-        commandMap.put("checkempty", checkEmptyLanguage); // Add CheckEmptyLanguage instance to command map
-
-        // Initialize CheckDeterministic instance
-        FileOpener fileOpenerForCheckDeterministic = new FileOpener("", fileContent);
-        checkDeterministic = new CheckDeterministic(fileOpenerForCheckDeterministic);
-        commandMap.put("checkdeterministic", checkDeterministic); // Add CheckDeterministic instance to command map
-
-        // Initialize RecognizeWord instance
-        FileOpener fileOpenerForRecognizeWord = new FileOpener("", fileContent);
-        recognizeWord = new RecognizeWord(fileOpenerForRecognizeWord);
-        commandMap.put("recognize", recognizeWord); // Add RecognizeWord instance to command map
-
-        // Initialize CheckFiniteLanguage instance
-        FileOpener fileOpenerForCheckFinite = new FileOpener("", fileContent);
-        this.checkFiniteLanguage = new CheckFiniteLanguage(fileOpenerForCheckFinite);
-        commandMap.put("checkfinite", checkFiniteLanguage); // Add CheckFiniteLanguage instance to command map
-    }
-
-    public void executeCommand(String command) {
-        String[] parts = command.split("\\s+", 2);
-        String commandName = parts[0].toLowerCase();
-        String argument = parts.length > 1 ? parts[1] : "";
-
-        if (commandName.equals("print")) {
-            // Find the automaton ID in the command
-            String automatonId = argument.trim();
-            // Search for the PrintTransitions instance associated with the automaton ID
-            PrintTransitions printTransitions = findPrintTransitionsInstance(automatonId);
-            // If found, process the transitions
-            if (printTransitions != null) {
-                printTransitions.processing();
-            } else {
-                System.out.println("No automaton found with ID: " + automatonId);
-            }
-            return;
-        }
-        if (commandName.equals("saveauto")) {
-            automatonFileSaver.processing(); // Call the processing method of AutomatonFileSaver
-            return;
-        }
-        if (commandName.equals("checkempty")) {
-            checkEmptyLanguage.processing(); // Call the processing method of CheckEmptyLanguage
-            return;
-        }
-        if (commandName.equals("checkdeterministic")) {
-            checkDeterministic.processing(); // Call the processing method of CheckDeterministic
-            return;
-        }
-        if (commandName.equals("recognize")) {
-            recognizeWord.processing(); // Call the processing method of RecognizeWord
-            return;
-        }
-        if (commandName.equals("checkfinite")) {
-            checkFiniteLanguage.processing(); // Call the processing method of CheckFiniteLanguage
-            return;
-        }
-
-        FileHandler cmd = commandMap.get(commandName);
-        if (cmd != null) {
-            if (cmd instanceof FileOpener) {
-                ((FileOpener) cmd).setFileName(argument);
-                currentFileName = argument; // Set the current file name after opening
-            } else if (cmd instanceof FileSaver) {
-                if (currentFileName.isEmpty()) {
-                    System.out.println("File is not open yet.");
-                    return;
-                }
-                ((FileSaver) cmd).setFileName(currentFileName);
-            } else if (cmd instanceof FileSaverAs) {
-                ((FileSaverAs) cmd).setNewFileName(argument);
-            }
-
-            cmd.processing();
-        } else {
-            System.out.println("Unknown command: " + commandName);
-        }
-    }
-
-    public Map<String, FileHandler> getCommandMap() {
-        return commandMap;
-    }
-
-    private PrintTransitions findPrintTransitionsInstance(String automatonId) {
-        for (FileHandler handler : commandMap.values()) {
-            if (handler instanceof PrintTransitions) {
-                PrintTransitions printTransitions = (PrintTransitions) handler;
-                String transitionAutomatonId = printTransitions.getAutomatonId();
-                if (transitionAutomatonId != null && transitionAutomatonId.equals(automatonId)) {
-                    return printTransitions;
-                }
-            }
-        }
-        return null;
-    }
-}*/
-import OOP2.proekt.f22621609.avtomat.Automaton;
-import OOP2.proekt.f22621609.contracts.FileHandler;
-import OOP2.proekt.f22621609.secondary_functions.*;
-
-import java.util.HashMap;
-import java.util.Map;
 /**
  * The {@code FileMenu} class manages a set of file-related commands for an automaton application.
  * It initializes various command handlers and executes commands based on user input.
  */
 public class FileMenu {
-    private Map<String, FileHandler> commandMap = new HashMap<>();
+    private Map<CommandType, FileHandler> commandMap = new HashMap<>();
     private StringBuilder fileContent = new StringBuilder();
     private String currentFileName = "";
-    private Automaton automaton;
     private AutomatonFileSaver automatonFileSaver;
     private CheckEmptyLanguage checkEmptyLanguage;
     private CheckDeterministic checkDeterministic;
@@ -158,123 +23,118 @@ public class FileMenu {
     private PositiveWrapper positiveWrapper;
     private RegexAutomatonCreator regexAutomatonCreator;
     private ConcatAutomata concatAutomaton;
-    //private Union unionAutomaton;
+    private UnionAutomata unionAutomata;
+
     /**
      * Constructs a {@code FileMenu} and initializes the command handlers.
      */
     public FileMenu() {
-        commandMap.put("close", new FileCloser(fileContent));
-        commandMap.put("exit", new ExitProgram());
-        commandMap.put("help", new FileHelper());
-        commandMap.put("open", new FileOpener("", fileContent));
-        commandMap.put("save", new FileSaver("", fileContent));
-        commandMap.put("saveas", new FileSaverAs("", fileContent));
-        commandMap.put("list", new ListMachines(new FileOpener("", fileContent)));
-
+        commandMap.put(CommandType.CLOSE, new FileCloser(fileContent));
+        commandMap.put(CommandType.EXIT, new ExitProgram());
+        commandMap.put(CommandType.HELP, new FileHelper());
+        commandMap.put(CommandType.OPEN, new FileOpener("", fileContent));
+        commandMap.put(CommandType.SAVE, new FileSaver("", fileContent));
+        commandMap.put(CommandType.SAVEAS, new FileSaverAs("", fileContent));
+        commandMap.put(CommandType.LIST, new ListMachines(new FileOpener("", fileContent)));
 
         // Add PrintTransitions instance to the command map
         FileOpener fileOpenerForPrint = new FileOpener("", fileContent);
         PrintTransitions printTransitions = new PrintTransitions(fileOpenerForPrint);
-        commandMap.put("print", printTransitions);
+        commandMap.put(CommandType.PRINT, printTransitions);
 
         // Initialize AutomatonFileSaver instance
         automatonFileSaver = new AutomatonFileSaver(fileContent);
-        commandMap.put("saveauto", automatonFileSaver);
+        commandMap.put(CommandType.SAVEAUTO, automatonFileSaver);
 
         // Initialize CheckEmptyLanguage instance
         FileOpener fileOpenerForCheckEmpty = new FileOpener("", fileContent);
         checkEmptyLanguage = new CheckEmptyLanguage(fileOpenerForCheckEmpty);
-        commandMap.put("checkempty", checkEmptyLanguage);
+        commandMap.put(CommandType.CHECKEMPTY, checkEmptyLanguage);
 
         // Initialize CheckDeterministic instance
         FileOpener fileOpenerForCheckDeterministic = new FileOpener("", fileContent);
         checkDeterministic = new CheckDeterministic(fileOpenerForCheckDeterministic);
-        commandMap.put("checkdeterministic", checkDeterministic);
+        commandMap.put(CommandType.CHECKDETERMINISTIC, checkDeterministic);
 
         // Initialize RecognizeWord instance
         FileOpener fileOpenerForRecognizeWord = new FileOpener("", fileContent);
         recognizeWord = new RecognizeWord(fileOpenerForRecognizeWord);
-        commandMap.put("recognize", recognizeWord);
+        commandMap.put(CommandType.RECOGNIZE, recognizeWord);
 
         // Initialize CheckFiniteLanguage instance
         FileOpener fileOpenerForCheckFinite = new FileOpener("", fileContent);
         this.checkFiniteLanguage = new CheckFiniteLanguage(fileOpenerForCheckFinite);
-        commandMap.put("checkfinite", checkFiniteLanguage);
+        commandMap.put(CommandType.CHECKFINITE, checkFiniteLanguage);
 
         FileOpener fileOpenerForPositiveWrapper = new FileOpener("", fileContent);
         positiveWrapper = new PositiveWrapper(fileOpenerForPositiveWrapper);
-        commandMap.put("un", positiveWrapper);
+        commandMap.put(CommandType.UN, positiveWrapper);
 
         FileOpener fileOpenerForRegexWrapper = new FileOpener("", fileContent);
         regexAutomatonCreator = new RegexAutomatonCreator(fileOpenerForRegexWrapper);
-        commandMap.put("reg",regexAutomatonCreator);
+        commandMap.put(CommandType.REG, regexAutomatonCreator);
 
         FileOpener fileOpenerForConcat = new FileOpener("", fileContent);
         concatAutomaton = new ConcatAutomata(fileOpenerForConcat);
-        commandMap.put("concat",concatAutomaton);
+        commandMap.put(CommandType.CONCAT, concatAutomaton);
 
-//        FileOpener fileOpenerForUnion = new FileOpener("",fileContent);
-//        //unionAutomaton = new Union(fileOpenerForUnion);
-//        commandMap.put("union",unionAutomaton);
+        FileOpener fileOpenerForUnion = new FileOpener("",fileContent);
+        unionAutomata = new UnionAutomata(fileOpenerForUnion);
+        commandMap.put(CommandType.UNION, unionAutomata);
     }
+
     /**
      * Executes the specified command.
      *
      * @param command the command to execute
+     * @param argument the argument for the command
      */
-    public void executeCommand(String command) {
-        String[] parts = command.split("\\s+", 2);
-        String commandName = parts[0].toLowerCase();
-        String argument = parts.length > 1 ? parts[1] : "";
-
-        if (commandName.equals("print")) {
-            String automatonId = argument.trim();
-            PrintTransitions printTransitions = findPrintTransitionsInstance(automatonId);
-            if (printTransitions != null) {
-                printTransitions.processing();
-            } else {
-                System.out.println("No automaton found with ID: " + automatonId);
-            }
+    public void executeCommand(CommandType command, String argument) {
+        if (command == CommandType.PRINT) {
+            PrintTransitions printTransitions = (PrintTransitions) commandMap.get(command);
+            printTransitions.setAutomatonId(argument);
+            printTransitions.processing();
             return;
         }
-        if (commandName.equals("saveauto")) {
+
+        if (command == CommandType.SAVEAUTO) {
             automatonFileSaver.processing();
             return;
         }
-        if (commandName.equals("checkempty")) {
+        if (command == CommandType.CHECKEMPTY) {
             checkEmptyLanguage.processing();
             return;
         }
-        if (commandName.equals("checkdeterministic")) {
+        if (command == CommandType.CHECKDETERMINISTIC) {
             checkDeterministic.processing();
             return;
         }
-        if (commandName.equals("recognize")) {
+        if (command == CommandType.RECOGNIZE) {
             recognizeWord.processing();
             return;
         }
-        if (commandName.equals("checkfinite")) {
+        if (command == CommandType.CHECKFINITE) {
             checkFiniteLanguage.processing();
             return;
         }
-        if (commandName.equals("un")) {
+        if (command == CommandType.UN) {
             positiveWrapper.processing();
             return;
         }
-        if (commandName.equals("reg")){
+        if (command == CommandType.REG) {
             regexAutomatonCreator.processing();
             return;
         }
-        if (commandName.equals("concat")){
+        if (command == CommandType.CONCAT) {
             concatAutomaton.processing();
             return;
         }
-//        if (commandName.equals("union")){
-//            unionAutomaton.processing();
-//            return;
-//        }
+        if(command == CommandType.UNION){
+            unionAutomata.processing();
+            return;
+        }
 
-        FileHandler cmd = commandMap.get(commandName);
+        FileHandler cmd = commandMap.get(command);
         if (cmd != null) {
             if (cmd instanceof FileOpener) {
                 ((FileOpener) cmd).setFileName(argument);
@@ -286,21 +146,13 @@ public class FileMenu {
                 }
                 ((FileSaver) cmd).setFileName(currentFileName);
             } else if (cmd instanceof FileSaverAs) {
-                ((FileSaverAs) cmd).setNewFileName(argument);
+                ((FileSaverAs) cmd).setFileName(argument);
             }
 
             cmd.processing();
         } else {
-            System.out.println("Unknown command: " + commandName);
+            System.out.println("Unknown command: " + command);
         }
-    }
-    /**
-     * Returns the command map containing the supported commands.
-     *
-     * @return the command map
-     */
-    public Map<String, FileHandler> getCommandMap() {
-        return commandMap;
     }
     /**
      * Finds the {@code PrintTransitions} instance associated with the specified automaton ID.

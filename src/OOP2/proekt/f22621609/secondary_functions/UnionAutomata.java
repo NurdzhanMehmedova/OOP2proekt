@@ -8,55 +8,56 @@ import OOP2.proekt.f22621609.main_functions.FileOpener;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 /**
- * Concatenates multiple automata into a single automaton.
+ * UnionAutomata class performs the union operation on two automata.
  */
-public class ConcatAutomata implements FileHandler {
+public class UnionAutomata implements FileHandler {
     /**
      * FileOpener instance to open and read automaton files.
      */
     private FileOpener fileOpener;
+
     /**
-     * Constructs a ConcatAutomata object with the specified FileOpener instance.
+     * Constructs a UnionAutomata object with the specified FileOpener instance.
      *
      * @param fileOpener the FileOpener instance to use for opening automaton files
      */
-    public ConcatAutomata(FileOpener fileOpener) {
+    public UnionAutomata(FileOpener fileOpener) {
         this.fileOpener = fileOpener;
     }
+
     /**
-     * Processes the concatenation of automata.
-     * Asks the user to enter the IDs of the automata to concatenate.
-     * Concatenates the specified automata and saves the result to a new file.
+     * Processes the union of automata.
+     * Asks the user to enter the IDs of the automata to union.
+     * Unions the specified automata and saves the result to a new file.
      */
     @Override
     public void processing() {
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter the IDs of the automata to concatinate (separated by space): ");
+        System.out.print("Enter the IDs of the automata to union (separated by space): ");
         String[] automatonIds = scanner.nextLine().trim().split(" ");
 
         StringBuilder fileContent = fileOpener.getFileContent();
         if (fileContent != null) {
-            String concatinatedAutomatonId = concatAutomata(automatonIds, fileContent.toString());
-            if (concatinatedAutomatonId != null) {
-                System.out.println("Concatinated automaton ID: " + concatinatedAutomatonId);
+            String unionedAutomatonId = unionAutomata(automatonIds, fileContent.toString());
+            if (unionedAutomatonId != null) {
+                System.out.println("Unioned automaton ID: " + unionedAutomatonId);
             }
         }
     }
 
     /**
-     * Concats the automata with the specified IDs extracted from the file content.
+     * Unions the automata with the specified IDs.
      *
-     * @param automatonIds the IDs of the automata to concat
+     * @param automatonIds the IDs of the automata to union
      * @param fileContent  the content of the file containing the automata
-     * @return the ID of the concatinated automaton if successful, {@code null} otherwise
+     * @return the ID of the unioned automaton if successful, {@code null} otherwise
      */
-    private String concatAutomata(String[] automatonIds, String fileContent) {
+    private String unionAutomata(String[] automatonIds, String fileContent) {
         List<Automaton> automata = new ArrayList<>();
         for (String id : automatonIds) {
             Automaton automaton = parseAutomaton(fileContent, id);
@@ -68,10 +69,10 @@ public class ConcatAutomata implements FileHandler {
             }
         }
 
-        Automaton concatinatedAutomaton = concat(automata);
-        String newAutomatonId = "Concat_" + String.join("_", automatonIds);
+        Automaton unionedAutomaton = union(automata);
+        String newAutomatonId = "Union_" + String.join("_", automatonIds);
 
-        saveAutomatonToFile(concatinatedAutomaton, newAutomatonId + ".xml", newAutomatonId);
+        saveAutomatonToFile(unionedAutomaton, newAutomatonId + ".xml", newAutomatonId);
 
         return newAutomatonId;
     }
@@ -153,39 +154,54 @@ public class ConcatAutomata implements FileHandler {
 
 
     /**
-     * Concats the list of automata into a single automaton.
+     * Unions the list of automata into a single automaton.
      *
-     * @param automata the list of automata to concat
-     * @return the concatinated Automaton object
+     * @param automata the list of automata to union
+     * @return the unioned Automaton object
      */
-    private Automaton concat(List<Automaton> automata) {
+    private Automaton union(List<Automaton> automata) {
+        Set<String> combinedAlphabet = new HashSet<>(); // Use a set to avoid duplicate symbols
         List<State> combinedStates = new ArrayList<>();
-        List<String> combinedAlphabet = new ArrayList<>();
         List<Transition> combinedTransitions = new ArrayList<>();
         List<State> combinedFinalStates = new ArrayList<>();
-        State combinedInitialState = null;
+        State combinedInitialState = new State("UnionedInitial", "Unioned Initial State");
 
-        // Combine states, alphabet, transitions, and final states of the input automata
         for (Automaton automaton : automata) {
             combinedStates.addAll(automaton.getStates());
-            combinedAlphabet.addAll(automaton.getAlphabet());
-            combinedTransitions.addAll(automaton.getTransitions());
             combinedFinalStates.addAll(automaton.getFinalStates());
 
-            // Set the initial state of the concatinated automaton
-            if (combinedInitialState == null) {
-                combinedInitialState = automaton.getInitialState();
-            } else {
-                // Add transition from the combined initial state to the initial state of the current automaton
-                State newInitialState = new State("combinedInitial", "Combined Initial State");
-                combinedTransitions.add(new Transition(combinedInitialState, automaton.getInitialState(), ""));
-                combinedInitialState = newInitialState;
+            // Add transitions from the combined initial state to the initial state of each automaton in the list
+            combinedTransitions.add(new Transition(combinedInitialState, automaton.getInitialState(), ""));
+
+            // Combine symbols from each automaton's alphabet
+            combinedAlphabet.addAll(automaton.getAlphabet());
+
+            // Translate transitions from each automaton to the combined states
+            for (Transition transition : automaton.getTransitions()) {
+                // Check if the symbol exists in all automata being unioned
+                if (symbolExistsInAll(transition.getInputSymbol(), automata)) {
+                    State fromState = new State(transition.getFromState().getId(), transition.getFromState().getName());
+                    State toState = new State(transition.getToState().getId(), transition.getToState().getName());
+                    combinedTransitions.add(new Transition(fromState, toState, transition.getInputSymbol()));
+                }
             }
         }
 
-        // Create and return the concatinated Automaton object
-        return new Automaton(combinedStates, combinedAlphabet, combinedTransitions, combinedInitialState, combinedFinalStates);
+        // Create and return the unioned Automaton object
+        return new Automaton(combinedStates, new ArrayList<>(combinedAlphabet),
+                combinedTransitions, combinedInitialState, combinedFinalStates);
     }
+
+    // Method to check if a symbol exists in all automata
+    private boolean symbolExistsInAll(String symbol, List<Automaton> automata) {
+        for (Automaton automaton : automata) {
+            if (!automaton.getAlphabet().contains(symbol)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 
 
     /**
@@ -193,7 +209,7 @@ public class ConcatAutomata implements FileHandler {
      *
      * @param automaton     the Automaton object to save
      * @param fileName      the name of the file to save to
-     * @param newAutomatonId the ID of the concatinated automaton
+     * @param newAutomatonId the ID of the unioned automaton
      */
     private void saveAutomatonToFile(Automaton automaton, String fileName, String newAutomatonId) {
         try (FileWriter writer = new FileWriter(fileName)) {
@@ -208,12 +224,12 @@ public class ConcatAutomata implements FileHandler {
      * Converts an Automaton object to XML format.
      *
      * @param automaton     the Automaton object to convert to XML
-     * @param newAutomatonId the ID of the new concatinated automaton
+     * @param newAutomatonId the ID of the new unioned automaton
      * @return the XML representation of the Automaton object
      */
     private String automatonToXML(Automaton automaton, String newAutomatonId) {
         StringBuilder xmlBuilder = new StringBuilder();
-        xmlBuilder.append("<automaton id=\"").append(newAutomatonId).append("\" name=\"Concatinated Automaton\">\n");
+        xmlBuilder.append("<automaton id=\"").append(newAutomatonId).append("\" name=\"Unioned Automaton\">\n");
 
         // Append states
         xmlBuilder.append("    <states>\n");

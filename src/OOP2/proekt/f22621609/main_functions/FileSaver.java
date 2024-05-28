@@ -2,6 +2,7 @@ package OOP2.proekt.f22621609.main_functions;
 import OOP2.proekt.f22621609.contracts.FileHandler;
 
 import java.io.*;
+
 /**
  * The {@code FileSaver} class implements the {@link FileHandler} interface
  * to handle the saving of file content to disk.
@@ -9,6 +10,7 @@ import java.io.*;
 public class FileSaver implements FileHandler {
     private String fileName;
     private StringBuilder fileContent;
+
     /**
      * Constructs a {@code FileSaver} object with the specified file name and
      * a {@code StringBuilder} containing the file content.
@@ -20,6 +22,7 @@ public class FileSaver implements FileHandler {
         this.fileName = fileName;
         this.fileContent = fileContent;
     }
+
     /**
      * Sets the name of the file to save.
      *
@@ -28,6 +31,7 @@ public class FileSaver implements FileHandler {
     public void setFileName(String fileName) {
         this.fileName = fileName;
     }
+
     /**
      * Saves the content of the file to disk with the specified file name.
      * If no file name is set, it prints an error message.
@@ -40,6 +44,7 @@ public class FileSaver implements FileHandler {
             System.out.println("No file is currently open. Use 'open' to open a file.");
         }
     }
+
     /**
      * Writes the file content to a text file with the specified file name.
      *
@@ -47,9 +52,9 @@ public class FileSaver implements FileHandler {
      * @param fileContent the content of the file to write
      */
     private void saveToFile(String fileName, StringBuilder fileContent) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName + ".txt"))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             writer.write(fileContent.toString());
-            System.out.println("Successfully saved to " + fileName + ".txt");
+            System.out.println("Successfully saved to " + fileName);
         } catch (IOException e) {
             System.out.println("Error saving the file: " + e.getMessage());
         }

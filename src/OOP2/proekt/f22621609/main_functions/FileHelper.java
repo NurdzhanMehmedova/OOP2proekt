@@ -36,7 +36,7 @@ public class FileHelper implements FileHandler {
         System.out.println("checkfinite\t\t-checks whether the language of a given automaton is finite");//8
         System.out.println("concat\t\t-finds the concatenation of two automata and creates a new automata. Prints the ID of the new automaton");//9
         System.out.println("reg\t\t-Creates a new automaton according to a given regular expression (Cliny's theorem). Prints the ID of the new automaton");//10
-
+        System.out.println("union\t\t-unions two automata to a new file");
         System.out.println("exit\t\t- exits the program");
     }
 }
