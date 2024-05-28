@@ -1,0 +1,56 @@
+<automaton id="auto1" name="Automaton 1">
+    <name>Automaton 1</name>
+    <states>
+        <state id="q0" name="State 0"/>
+        <state id="q1" name="State 1"/>
+        <state id="q2" name="State 2"/>
+    </states>
+    <alphabet>
+        <symbol>a</symbol>
+        <symbol>b</symbol>
+        <symbol>c</symbol>
+        <symbol>d</symbol>
+        <symbol>e</symbol>
+        <symbol>f</symbol>
+        <symbol>g</symbol>
+        <symbol>h</symbol>
+        <symbol>i</symbol>
+        <symbol>j</symbol>
+        <symbol>k</symbol>
+        <symbol>l</symbol>
+        <symbol>m</symbol>
+        <symbol>n</symbol>
+    </alphabet>
+    <initialState>q0</initialState>
+    <finalStates>
+        <state id="q2" name="State 2"/>
+    </finalStates>
+    <transitions>
+<transition>
+    <fromState>q1</fromState>
+    <toState>q0</toState>
+    <inputSymbol>a</inputSymbol>
+</transition>
+<transition>
+    <fromState>q2</fromState>
+    <toState>q0</toState>
+    <inputSymbol>b</inputSymbol>
+</transition>
+
+<transition>
+    <fromState>qε</fromState>
+    <toState>q0</toState>
+    <inputSymbol>ε</inputSymbol>
+</transition>
+        <transition>
+            <fromState>q0</fromState>
+            <toState>q1</toState>
+            <inputSymbol>a</inputSymbol>
+        </transition>
+        <transition>
+            <fromState>q0</fromState>
+            <toState>q2</toState>
+            <inputSymbol>b</inputSymbol>
+        </transition>
+    </transitions>
+</automaton>

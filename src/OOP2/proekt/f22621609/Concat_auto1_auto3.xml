@@ -1,0 +1,46 @@
+<automaton id="Concat_auto1_auto3" name="Concatinated Automaton">
+    <states>
+        <state id="q0" name="State 0"/>
+        <state id="q1" name="State 1"/>
+        <state id="q2" name="State 2"/>
+        <state id="q2" name="State 2"/>
+        <state id="q0" name="State 0"/>
+        <state id="q1" name="State 1"/>
+        <state id="q2" name="State 2"/>
+        <state id="q2" name="State 2"/>
+    </states>
+    <alphabet>
+    </alphabet>
+    <initialState>combinedInitial</initialState>
+    <finalStates>
+        <state id="q2" name="State 2"/>
+        <state id="q2" name="State 2"/>
+    </finalStates>
+    <transitions>
+        <transition>
+            <fromState>q0</fromState>
+            <toState>q1</toState>
+            <inputSymbol>a</inputSymbol>
+        </transition>
+        <transition>
+            <fromState>q0</fromState>
+            <toState>q2</toState>
+            <inputSymbol>b</inputSymbol>
+        </transition>
+        <transition>
+            <fromState>q0</fromState>
+            <toState>q1</toState>
+            <inputSymbol>0</inputSymbol>
+        </transition>
+        <transition>
+            <fromState>q0</fromState>
+            <toState>q2</toState>
+            <inputSymbol>1</inputSymbol>
+        </transition>
+        <transition>
+            <fromState>q0</fromState>
+            <toState>q0</toState>
+            <inputSymbol></inputSymbol>
+        </transition>
+    </transitions>
+</automaton>

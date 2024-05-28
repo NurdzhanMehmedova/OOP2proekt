@@ -1,0 +1,44 @@
+<automaton id="auto3" name="Automaton 3">
+    <name>Automaton 3</name>
+    <states>
+        <state id="q0" name="State 0"/>
+        <state id="q1" name="State 1"/>
+        <state id="q2" name="State 2"/>
+    </states>
+    <alphabet>
+        <symbol>0</symbol>
+        <symbol>1</symbol>
+    </alphabet>
+    <initialState>q0</initialState>
+    <finalStates>
+        <state id="q2" name="State 2"/>
+    </finalStates>
+    <transitions>
+<transition>
+    <fromState>q1</fromState>
+    <toState>q0</toState>
+    <inputSymbol>0</inputSymbol>
+</transition>
+<transition>
+    <fromState>q2</fromState>
+    <toState>q0</toState>
+    <inputSymbol>0</inputSymbol>
+</transition>
+
+<transition>
+    <fromState>qε</fromState>
+    <toState>q0</toState>
+    <inputSymbol>ε</inputSymbol>
+</transition>
+        <transition>
+            <fromState>q0</fromState>
+            <toState>q1</toState>
+            <inputSymbol>0</inputSymbol>
+        </transition>
+        <transition>
+            <fromState>q0</fromState>
+            <toState>q2</toState>
+            <inputSymbol>0</inputSymbol>
+        </transition>
+    </transitions>
+</automaton>

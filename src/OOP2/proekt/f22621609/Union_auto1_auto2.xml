@@ -1,0 +1,31 @@
+<automaton id="Union_auto1_auto2" name="Unioned Automaton">
+    <states>
+        <state id="q0" name="State 0"/>
+        <state id="q1" name="State 1"/>
+        <state id="q2" name="State 2"/>
+        <state id="q2" name="State 2"/>
+        <state id="s0" name="State 0"/>
+        <state id="s1" name="State 1"/>
+        <state id="s2" name="State 2"/>
+        <state id="s2" name="State 2"/>
+    </states>
+    <alphabet>
+    </alphabet>
+    <initialState>UnionedInitial</initialState>
+    <finalStates>
+        <state id="q2" name="State 2"/>
+        <state id="s2" name="State 2"/>
+    </finalStates>
+    <transitions>
+        <transition>
+            <fromState>UnionedInitial</fromState>
+            <toState>q0</toState>
+            <inputSymbol></inputSymbol>
+        </transition>
+        <transition>
+            <fromState>UnionedInitial</fromState>
+            <toState>s0</toState>
+            <inputSymbol></inputSymbol>
+        </transition>
+    </transitions>
+</automaton>
